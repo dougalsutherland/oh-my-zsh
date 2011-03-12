@@ -15,10 +15,18 @@ if [[ $HOST == 'epanastrophe.local' ]]; then
 		echo `$HOME/bin/batcharge.py` 2>/dev/null
 	}
 
-	RPROMPT='[$(git_prompt_info)$(battery_charge)%(?.. %{$fg_bold[red]%}%?%{$reset_color%})]'
-
+    local time_color='$(battery_charge)'
 else
-
-	RPROMPT='[$(git_prompt_info)%{$fg[magenta]%}%t%(?.. %{$fg_bold[red]%}%?)%{$reset_color%}]'
+    local time_color='%{$fg[magenta]%}'
 fi
 
+RPROMPT='[$(git_prompt_info)'$time_color'%D{%L:%M%p}%(?.. %{$fg_bold[red]%}%?)%{$reset_color%}]'
+
+
+# 	RPROMPT='[$(git_prompt_info)$(battery_charge)%(?.. %{$fg_bold[red]%}%?%{$reset_color%})]'
+# 
+# else
+# 
+# 	RPROMPT='[$(git_prompt_info)%{$fg[magenta]%}%t%(?.. %{$fg_bold[red]%}%?)%{$reset_color%}]'
+# fi
+# 
