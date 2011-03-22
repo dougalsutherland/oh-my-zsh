@@ -1,7 +1,9 @@
-PROMPT='%{$fg_bold[green]%}%m%{$reset_color%}:%{$fg_bold[blue]%}%~%(!.%{$fg[red]%}#%{$reset_color%}.%{$reset_color%}$) '
+PROMPT='%m%{$reset_color%}:%{$fg_bold[blue]%}%~%(!.%{$fg[red]%}#%{$reset_color%}.%{$reset_color%}$) '
 
 if [[ ! ($USER == 'dougal' || $USER == 'dsuther1' || $USER == 's-dougal') ]]; then
-	PROMPT="%(!.%{$fg_bold[red]%}.%{$fg_bold[green]%})%n%{$reset_color%}@${PROMPT}"
+	PROMPT="%(!.%{$fg_bold[red]%}.%{$fg_bold[green]%})%n@${PROMPT}"
+else;
+	PROMPT="%{$fg_bold[green]%}${PROMPT}"
 fi
 
 
@@ -21,12 +23,3 @@ else
 fi
 
 RPROMPT='[$(git_prompt_info)'$time_color'%D{%L:%M%p}%(?.. %{$fg_bold[red]%}%?)%{$reset_color%}]'
-
-
-# 	RPROMPT='[$(git_prompt_info)$(battery_charge)%(?.. %{$fg_bold[red]%}%?%{$reset_color%})]'
-# 
-# else
-# 
-# 	RPROMPT='[$(git_prompt_info)%{$fg[magenta]%}%t%(?.. %{$fg_bold[red]%}%?)%{$reset_color%}]'
-# fi
-# 
