@@ -14,7 +14,25 @@ ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}*"
 
 if [[ $HOST == 'epanastrophe.local' ]]; then
 	function battery_charge {
-		echo `$HOME/bin/batcharge.py` 2>/dev/null
+		# get the relevant numbers
+		tmp=`mktemp -t battery`
+		ioreg -rc AppleSmartBattery | egrep '(MaxCapacity|CurrentCapacity)' > $tmp
+
+		max=`grep Max $tmp | egrep -o '[[:digit:]]+'`
+		curr=`grep Current $tmp | egrep -o '[[:digit:]]+'`
+		rm -f $tmp
+
+		# divide
+		portion=`echo "100 * $curr / $max" | bc` # no -l, so int division
+
+		# spit out the appropriate color
+		if [ $portion -gt 60 ]; then
+			echo '%{[32m%}' # green
+		elif [ $portion -gt 35 ]; then
+			echo '%{[1;33m%}' # yellow
+		else
+			echo '%{[31m%}' # red
+		fi
 	}
 
     local time_color='$(battery_charge)'
