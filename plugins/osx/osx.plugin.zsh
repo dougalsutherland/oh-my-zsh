@@ -97,3 +97,6 @@ function trash() {
   IFS=$temp_ifs
 }
 
+function volume() {
+  osascript -e "set volume $1" 2>/dev/null
+}
