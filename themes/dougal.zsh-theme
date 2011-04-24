@@ -12,6 +12,7 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}*"
 
+
 if [[ $HOST == 'epanastrophe.local' ]]; then
 	function battery_charge {
 		# get the relevant numbers
@@ -37,4 +38,24 @@ else
     local time_color='%{$fg[magenta]%}'
 fi
 
-RPROMPT='[$(git_prompt_info)'$time_color'%D{%L:%M%p}%(?.. %{$fg_bold[red]%}%?)%{$reset_color%}]'
+local time_str='%D{%L:%M%p}'
+
+retcode_enabled="%(?.. %{$fg_bold[red]%}%?)"
+retcode_disabled=''
+retcode=$retcode_enabled
+
+RPROMPT='[$(git_prompt_info)'$time_color$time_str'${retcode}%{$reset_color%}]'
+
+# taken from dieter.zsh-theme
+function accept-line-or-clear-warning () {
+	if [[ -z $BUFFER ]]; then
+		time=$time_disabled
+		retcode=$retcode_disabled
+	else
+		time=$time_enabled
+		retcode=$retcode_enabled
+	fi
+	zle accept-line
+}
+zle -N accept-line-or-clear-warning
+bindkey '^M' accept-line-or-clear-warning
