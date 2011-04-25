@@ -1,6 +1,6 @@
 PROMPT='%m%{$reset_color%}:%{$fg_bold[blue]%}%~%(!.%{$fg[red]%}#%{$reset_color%}.%{$reset_color%}$) '
 
-if [[ ! ($USER == 'dougal' || $USER == 'dsuther1' || $USER == 's-dougal') ]]; then
+if [[ ! ($USER == 'dougal' || $USER == 'dsutherl' || $USER == 's-dougal' || $USER == 'dsuther1') ]]; then
 	PROMPT="%(!.%{$fg_bold[red]%}.%{$fg_bold[green]%})%n@${PROMPT}"
 else;
 	PROMPT="%{$fg_bold[green]%}${PROMPT}"
