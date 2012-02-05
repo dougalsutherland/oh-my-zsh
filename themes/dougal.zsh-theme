@@ -1,4 +1,11 @@
-PROMPT='%m%{$reset_color%}:%{$fg_bold[blue]%}%~%(!.%{$fg[red]%}#%{$reset_color%}.%{$reset_color%}$) '
+function christmas-tree () {
+    d=$(date '+%e %d' | sed 's/^ *//; s/ /./'); # eg '12.01' or '1.03'
+    if [[ $d -ge 12.01 && $d -le 12.25 ]]; then
+        echo -e '\U0001F384  '
+    fi
+}
+
+PROMPT='$(christmas-tree)%m%{$reset_color%}:%{$fg_bold[blue]%}%~%(!.%{$fg[red]%}#%{$reset_color%}.%{$reset_color%}$) '
 
 if [[ ! ($USER == 'dougal' || $USER == 'dsutherl' || $USER == 's-dougal' || $USER == 'dsuther1') ]]; then
 	PROMPT="%(!.%{$fg_bold[red]%}.%{$fg_bold[green]%})%n@${PROMPT}"
