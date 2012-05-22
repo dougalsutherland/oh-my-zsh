@@ -1,6 +1,6 @@
 function christmas-tree () {
-    d=$(date '+%e %d' | sed 's/^ *//; s/ /./'); # eg '12.01' or '1.03'
-    if [[ $d -ge 12.01 && $d -le 12.25 ]]; then
+    d=$(date '+%m %d' | sed 's/^ *//; s/^0//; s/ /./'); # eg '12.01' or '01.03'
+    if [[ $d -ge 12.10 && $d -le 12.25 ]]; then
         echo -e '\U0001F384  '
     fi
 }
@@ -13,11 +13,6 @@ else;
 	PROMPT="%{$fg_bold[green]%}${PROMPT}"
 fi
 
-
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
-ZSH_THEME_GIT_PROMPT_CLEAN=""
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}*"
 
 
 if [[ $HOST == 'epanastrophe.local' ]]; then
@@ -51,15 +46,22 @@ retcode_enabled="%(?.. %{$fg_bold[red]%}%?)"
 retcode_disabled=''
 retcode=$retcode_enabled
 
-RPROMPT='[$(git_prompt_info)'$time_color$time_str'${retcode}%{$reset_color%}]'
+if [[ -z $NO_GIT_IN_PROMPT ]]; then
+	ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}"
+	ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
+	ZSH_THEME_GIT_PROMPT_CLEAN=""
+	ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}*"
+
+	RPROMPT='[$(git_prompt_info)'$time_color$time_str'${retcode}%{$reset_color%}]'
+else
+	RPROMPT='['$time_color$time_str'${retcode}%{$reset_color%}]'
+fi
 
 # taken from dieter.zsh-theme
 function accept-line-or-clear-warning () {
 	if [[ -z $BUFFER ]]; then
-		time=$time_disabled
 		retcode=$retcode_disabled
 	else
-		time=$time_enabled
 		retcode=$retcode_enabled
 	fi
 	zle accept-line
