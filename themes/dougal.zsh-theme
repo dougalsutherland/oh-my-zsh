@@ -46,16 +46,17 @@ retcode_enabled="%(?.. %{$fg_bold[red]%}%?)"
 retcode_disabled=''
 retcode=$retcode_enabled
 
+RPROMPT='$(anaconda_prompt_info)'$time_color$time_str'${retcode}%{$reset_color%}]'
+
 if [[ -z $NO_GIT_IN_PROMPT ]]; then
 	ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}"
 	ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
 	ZSH_THEME_GIT_PROMPT_CLEAN=""
 	ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}*"
 
-	RPROMPT='[$(git_prompt_info)'$time_color$time_str'${retcode}%{$reset_color%}]'
-else
-	RPROMPT='['$time_color$time_str'${retcode}%{$reset_color%}]'
+    RPROMPT='$(git_prompt_info)'$RPROMPT
 fi
+RPROMPT='['$RPROMPT
 
 # taken from dieter.zsh-theme
 function accept-line-or-clear-warning () {

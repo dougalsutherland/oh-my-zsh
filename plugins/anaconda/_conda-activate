@@ -1,0 +1,7 @@
+#compdef conda-activate
+
+function _conda_envs() {
+    # TODO not perfect, since it lets you recurse, but better than nothing
+    _files -/ -W $ANACONDA/envs
+}
+_arguments -s "::env:_conda_envs"
