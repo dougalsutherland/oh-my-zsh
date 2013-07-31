@@ -1,32 +1,106 @@
-if (( ! $+commands[conda] )); then
+if [[ -z $ANACONDA ]] && (( ! $+commands[conda] )); then
     function anaconda_prompt_info() { }
 else
-    function anaconda_prompt_info(){
-      if [[ -n $CONDA_DEFAULT_ENV ]]; then
-          echo "%{$fg[cyan]%}$CONDA_DEFAULT_ENV "
-      fi
-    }
+    # find the anaconda root
+    if [[ -z $ANACONDA ]]; then
+        anaconda_root=$ANACONDA
+    else
+        anaconda_root=$(dirname $(dirname =conda))
+    fi
+    anaconda_bin_dir=$anaconda_root/bin
 
-    _conda_active=0;
-
+    # activate an environment
     function conda-activate {
-        if [[ $conda_active == 1 ]]; then
-            echo "deactivating $CONDA_DEFAULT_ENV"
+        local dir
+        dir=$anaconda_root/envs/$1/bin
+        if [[ ! -d $dir ]]; then
+            echo "no such directory $dir" >&2
+            return 1
+        fi
+
+        if [[ -n $CONDA_DEFAULT_ENV ]]; then
             conda-deactivate
         fi
-        _CONDA_OLD_PATH=$PATH
-        conda_active=1;
-        export PATH=$(conda ..activate "$@")
-        export CONDA_DEFAULT_ENV="$@"
-        rehash
+        conda-root-off
+
+        echo "adding $dir to path" >&2
+        path=($dir $path)
+        export CONDA_DEFAULT_ENV=$1
+    }
+    # deactivate the current environment
+    function conda-deactivate {
+        if [[ -n $CONDA_DEFAULT_ENV ]]; then
+            dir=$anaconda_root/envs/$CONDA_DEFAULT_ENV/bin
+            echo "dropping $dir from path"
+            path[$path[(i)$dir]]=()
+            unset CONDA_DEFAULT_ENV
+        fi
     }
 
-    function conda-deactivate {
-        if [[ $conda_active == 1 ]]; then
-            export PATH=$_CONDA_OLD_PATH
-            unset CONDA_DEFAULT_ENV
-            conda_active=0
-            rehash
+    # activate the conda root dir
+    function conda-root-on {
+        echo "adding $anaconda_bin_dir to path"
+        get-first-conda-index
+        path[$(( $first_conda_index + 1)),0]=$anaconda_bin_dir
+    }
+    # deactivate the conda root dir
+    function conda-root-off {
+        local x
+        x=$path[(i)$anaconda_bin_dir]
+        if [[ $x -le $#path ]]; then
+            echo "dropping $anaconda_bin_dir from path"
+            path[$x]=()
+        fi
+    }
+
+    # make conda cmd always available even when not active,
+    # and add our activation stuff to it
+    function conda {
+        if [[ $1 == "activate" ]]; then
+            conda-activate $2
+        elif [[ $1 == "deactivate" ]]; then
+            conda-deactivate
+            conda-root-on
+        elif [[ $1 == "on" || $1 == "root-on" ]]; then
+            conda-root-on
+        elif [[ $1 == "root-off" ]]; then
+            conda-root-off
+        elif [[ $1 == "off" ]]; then
+            conda-deactivate
+            conda-root-off
+        else
+            $anaconda_bin_dir/conda $*
+        fi
+    }
+
+    # get the first index of a conda entry in the path
+    # must be a fancy zsh way to do this, right?
+    function get-first-conda-index {
+        first_conda_index=0
+        local x i
+        for x in $path; do
+            i=$(( i + 1))
+            if [[ $x == "$anaconda_root"/* ]]; then
+                first_conda_index=$i
+                return 0
+            fi
+        done
+        first_conda_index=0
+        return 1
+    }
+
+    # any conda envs in path?
+    function no-conda-active {
+        get-first-conda-index
+        return $first_conda_index
+    }
+
+    # goes in da prompt
+    function anaconda_prompt_info() {
+        if [[ -n $CONDA_DEFAULT_ENV ]]; then
+            echo "%{$fg[cyan]%}$CONDA_DEFAULT_ENV "
+        elif no-conda-active; then
+            echo "%{$fg[cyan]%}no-conda "
         fi
     }
 fi

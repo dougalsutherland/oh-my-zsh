@@ -5,16 +5,15 @@ function christmas-tree () {
     fi
 }
 
-PROMPT='$(christmas-tree)%m%{$reset_color%}:%{$fg_bold[blue]%}%~%(!.%{$fg[red]%}#%{$reset_color%}.%{$reset_color%}$) '
+PROMPT='$(christmas-tree)%{$fg_bold[blue]%}%~%(!.%{$fg[red]%}#%{$reset_color%}.%{$reset_color%}$) '
 
 if [[ ! ($USER == 'dougal' || $USER == 'dsutherl' || $USER == 's-dougal' || $USER == 'dsuther1') ]]; then
-	PROMPT="%(!.%{$fg_bold[red]%}.%{$fg_bold[green]%})%n@${PROMPT}"
+	userhost="%(!.%{$fg_bold[red]%}.%{$fg_bold[green]%})%n@%m"
 else;
-	PROMPT="%{$fg_bold[green]%}${PROMPT}"
+	userhost="%{$fg_bold[green]%}%m"
 fi
 
-
-
+# TODO: color the hostname instead of the time?
 if [[ $HOST == 'epanastrophe.local' ]]; then
 	function battery_charge {
 		# get the relevant numbers
@@ -46,7 +45,7 @@ retcode_enabled="%(?.. %{$fg_bold[red]%}%?)"
 retcode_disabled=''
 retcode=$retcode_enabled
 
-RPROMPT='$(anaconda_prompt_info)'$time_color$time_str'${retcode}%{$reset_color%}]'
+RPROMPT='$(anaconda_prompt_info)'$userhost' '$time_color$time_str'${retcode}%{$reset_color%}]'
 
 if [[ -z $NO_GIT_IN_PROMPT ]]; then
 	ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}"
