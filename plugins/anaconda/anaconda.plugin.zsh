@@ -71,6 +71,7 @@ else
         else
             $anaconda_bin_dir/conda $*
         fi
+        rehash
     }
 
     # get the first index of a conda entry in the path
