@@ -2,7 +2,7 @@ if [[ -z $ANACONDA ]] && (( ! $+commands[conda] )); then
     function anaconda_prompt_info() { }
 else
     # find the anaconda root
-    if [[ -z $ANACONDA ]]; then
+    if [[ -n $ANACONDA ]]; then
         anaconda_root=$ANACONDA
     else
         anaconda_root=$(dirname $(dirname =conda))
