@@ -61,7 +61,7 @@ function my_git_prompt_info {
         git_prompt_info
     elif if [[ -z $NO_GIT_IN_PROMPT ]]; then
         fs=$(df -P $PWD | tail -1 | cut -d' ' -f1)
-        if [[ ( "$fs" != "AFS" ) && ( "$fs" != *:* ) ]]; then
+        if [[ ( "$fs" != "AFS" ) ]]; then
             git_prompt_info
         fi
     fi
