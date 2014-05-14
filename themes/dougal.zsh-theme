@@ -57,8 +57,13 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}*"
 function my_git_prompt_info {
-    if [ ! $NO_GIT_IN_PROMPT ]; then
+    if [[ -n $FORCE_GIT_IN_PROMPT ]]; then
         git_prompt_info
+    elif if [[ -z $NO_GIT_IN_PROMPT ]]; then
+        fs=$(df -P $PWD | tail -1 | cut -d' ' -f1)
+        if [[ ( "$fs" != "AFS" ) && ( "$fs" != *:* ) ]]; then
+            git_prompt_info
+        fi
     fi
 }
 
