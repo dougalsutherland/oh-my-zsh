@@ -15,11 +15,6 @@ else;
 	userhost="%{$fg_bold[green]%}%m"
 fi
 
-if [[ -n $PROMPT_HOST ]]; then
-    PROMPT="$PROMPT_HOST$PROMPT"
-fi
-
-
 # TODO: color the hostname instead of the time?
 if [[ $HOST == 'epanastrophe.local' ]]; then
 	function battery_charge {
