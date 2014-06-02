@@ -30,6 +30,7 @@ else
     # deactivate the current environment
     function conda-deactivate {
         if [[ -n $CONDA_DEFAULT_ENV ]]; then
+            local dir
             dir=$anaconda_root/envs/$CONDA_DEFAULT_ENV/bin
             echo "dropping $dir from path"
             path[$path[(i)$dir]]=()
