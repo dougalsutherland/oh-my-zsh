@@ -16,6 +16,18 @@ else;
 fi
 
 # TODO: color the hostname instead of the time?
+function battery_color {
+    # argument: battery percent, 0 to 100
+    # spit out the appropriate color
+    if [ $1 -ge 60 ]; then
+        echo '%{[32m%}' # green
+    elif [ $1 -ge 30 ]; then
+        echo '%{[1;33m%}' # yellow
+    else
+        echo '%{[31m%}' # red
+    fi
+}
+
 if [[ $HOST == 'epanastrophe.local' ]]; then
 	function battery_charge {
 		# get the relevant numbers
@@ -26,15 +38,15 @@ if [[ $HOST == 'epanastrophe.local' ]]; then
 		# divide
 		portion=`echo "100 * $curr / $max" | bc` # no -l, so int division
 
-		# spit out the appropriate color
-		if [ $portion -ge 60 ]; then
-			echo '%{[32m%}' # green
-		elif [ $portion -ge 30 ]; then
-			echo '%{[1;33m%}' # yellow
-		else
-			echo '%{[31m%}' # red
-		fi
+        battery_color $portion
 	}
+
+    local time_color='$(battery_charge)'
+elif [[ $HOST == 'autonmobile' ]]; then
+    function battery_charge {
+        res=$(acpi | grep -Po '\d+(?=%)')
+        battery_color $res
+    }
 
     local time_color='$(battery_charge)'
 else
