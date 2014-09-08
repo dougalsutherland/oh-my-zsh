@@ -28,7 +28,7 @@ function battery_color {
     fi
 }
 
-if [[ $HOST == 'epanastrophe.local' ]]; then
+if [[ $HOST == abrodietical.* ]]; then
 	function battery_charge {
 		# get the relevant numbers
 		res=$(ioreg -rc AppleSmartBattery | egrep '(MaxCapacity|CurrentCapacity)')
