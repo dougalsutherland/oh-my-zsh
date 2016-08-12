@@ -23,7 +23,9 @@ else
         fi
         conda-root-off
 
-        echo "adding $dir to path" >&2
+        if [[ ! $CONDA_QUIET ]]; then
+            echo "adding $dir to path" >&2
+        fi
         path=($dir $path)
         export CONDA_DEFAULT_ENV=$1
     }
@@ -32,7 +34,9 @@ else
         if [[ -n $CONDA_DEFAULT_ENV ]]; then
             local dir
             dir=$anaconda_root/envs/$CONDA_DEFAULT_ENV/bin
-            echo "dropping $dir from path"
+            if [[ ! $CONDA_QUIET ]]; then
+                echo "dropping $dir from path"
+            fi
             path[$path[(i)$dir]]=()
             unset CONDA_DEFAULT_ENV
         fi
@@ -40,7 +44,9 @@ else
 
     # activate the conda root dir
     function conda-root-on {
-        echo "adding $anaconda_bin_dir to path"
+        if [[ ! $CONDA_QUIET ]]; then
+            echo "adding $anaconda_bin_dir to path"
+        fi
         get-first-conda-index
         path[$(( $first_conda_index + 1)),0]=$anaconda_bin_dir
     }
@@ -49,7 +55,9 @@ else
         local x
         x=$path[(i)$anaconda_bin_dir]
         if [[ $x -le $#path ]]; then
-            echo "dropping $anaconda_bin_dir from path"
+            if [[ ! $CONDA_QUIET ]]; then
+                echo "dropping $anaconda_bin_dir from path"
+            fi
             path[$x]=()
         fi
     }
