@@ -9,7 +9,7 @@ function christmas-tree () {
 
 PROMPT='%{$fg_bold[blue]%}%~%(!.%{$fg[red]%}#%{$reset_color%}.%{$reset_color%}$(christmas-tree)) '
 
-if [[ ! ($USER == 'dougal' || $USER == 'dsutherl' || $USER == 's-dougal' || $USER == 'dsuther1') ]]; then
+if [[ ! ($USER == 'dougal' || $USER == 'dougals' || $USER == 'dsutherl' || $USER == 's-dougal' || $USER == 'dsuther1') ]]; then
 	userhost="%(!.%{$fg_bold[red]%}.%{$fg_bold[green]%})%n@%m"
 else;
 	userhost="%{$fg_bold[green]%}%m"
